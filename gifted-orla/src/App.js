@@ -1,11 +1,11 @@
-import logo from "./logo.svg";
 import "./App.css";
-import ProductCard from "./components/ProductCard";
+import ProductList from "./components/ProductList";
+import { products } from "./data/DummyData";
 
 function App() {
   return (
     <div>
-      <ProductCard />
+      <ProductList products={products} />
     </div>
   );
 }
