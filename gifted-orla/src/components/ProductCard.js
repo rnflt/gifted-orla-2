@@ -33,13 +33,13 @@ class ProductCard extends React.Component {
         <Card>
           <React.Fragment>
             <CardContent>
-              <Typography gutterBottom>this.props.name</Typography>
+              <Typography gutterBottom>{this.props.name}</Typography>
               <Typography>be-nev-o-lent</Typography>
-              <Typography>this.props.brand</Typography>
+              <Typography>{this.props.brand}</Typography>
               <Typography variant="body">
                 well meaning and kindly.
                 <br />
-                this.props.price
+                {this.props.price}
               </Typography>
             </CardContent>
             <CardActions>
