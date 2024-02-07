@@ -6,28 +6,50 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-const card = (
-  <React.Fragment>
-    <CardContent>
-      <Typography gutterBottom>Word of the Day</Typography>
-      <Typography>be-nev-o-lent</Typography>
-      <Typography>adjective</Typography>
-      <Typography variant="body">
-        well meaning and kindly.
-        <br />
-        {'"a benevolent smile"'}
-      </Typography>
-    </CardContent>
-    <CardActions>
-      <Button>Learn More</Button>
-    </CardActions>
-  </React.Fragment>
-);
-
-export default function ProductCard() {
+const card = ({ id, brand, name, price }) => {
   return (
-    <Box sx={{ minWidth: 275 }}>
-      <Card>{card}</Card>
-    </Box>
+    <React.Fragment>
+      <CardContent>
+        <Typography gutterBottom>{name}</Typography>
+        <Typography>be-nev-o-lent</Typography>
+        <Typography>{brand}</Typography>
+        <Typography variant="body">
+          well meaning and kindly.
+          <br />
+          {price}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button>Learn More</Button>
+      </CardActions>
+    </React.Fragment>
   );
+};
+
+class ProductCard extends React.Component {
+  render() {
+    return (
+      <Box sx={{ minWidth: 275 }}>
+        <Card>
+          <React.Fragment>
+            <CardContent>
+              <Typography gutterBottom>this.props.name</Typography>
+              <Typography>be-nev-o-lent</Typography>
+              <Typography>this.props.brand</Typography>
+              <Typography variant="body">
+                well meaning and kindly.
+                <br />
+                this.props.price
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button>Learn More</Button>
+            </CardActions>
+          </React.Fragment>
+        </Card>
+      </Box>
+    );
+  }
 }
+
+export default ProductCard;
