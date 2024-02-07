@@ -34,7 +34,6 @@ class ProductCard extends React.Component {
           <React.Fragment>
             <CardContent>
               <Typography gutterBottom>{this.props.name}</Typography>
-              <Typography>be-nev-o-lent</Typography>
               <Typography>{this.props.brand}</Typography>
               <Typography variant="body">
                 well meaning and kindly.
