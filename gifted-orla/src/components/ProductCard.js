@@ -11,22 +11,24 @@ class ProductCard extends React.Component {
     return (
       <Card>
         <React.Fragment>
-          <CardActionArea>
+          <CardActionArea sx={{ display: "flex", flexDirection: "row" }}>
             <CardMedia
               component="img"
-              height="100"
-              image="/static/images/cards/contemplative-reptile.jpg"
+              sx={{ width: "150px" }}
+              image={require("./house.jpg")}
               alt="green iguana"
             />
-            <CardContent>
-              <Typography>{this.props.name}</Typography>
-              <Typography>{this.props.brand}</Typography>
+            <CardContent sx={{ flex: "1 0 auto" }}>
+              <Typography variant="h5">{this.props.name}</Typography>
+              <Typography variant="subtitle1" color="text.secondary">
+                {this.props.brand}
+              </Typography>
               <Typography>{this.props.price}</Typography>
             </CardContent>
+            <CardActions>
+              <Button>Learn More</Button>
+            </CardActions>
           </CardActionArea>
-          <CardActions>
-            <Button>Learn More</Button>
-          </CardActions>
         </React.Fragment>
       </Card>
     );
