@@ -5,48 +5,31 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-
-const card = ({ id, brand, name, price }) => {
-  return (
-    <React.Fragment>
-      <CardContent>
-        <Typography gutterBottom>{name}</Typography>
-        <Typography>be-nev-o-lent</Typography>
-        <Typography>{brand}</Typography>
-        <Typography variant="body">
-          well meaning and kindly.
-          <br />
-          {price}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button>Learn More</Button>
-      </CardActions>
-    </React.Fragment>
-  );
-};
+import { CardActionArea, CardMedia } from "@mui/material";
 
 class ProductCard extends React.Component {
   render() {
     return (
-      <Box sx={{ minWidth: 275 }}>
-        <Card>
-          <React.Fragment>
+      <Card>
+        <React.Fragment>
+          <CardActionArea>
+            <CardMedia
+              component="img"
+              height="100"
+              image="/static/images/cards/contemplative-reptile.jpg"
+              alt="green iguana"
+            />
             <CardContent>
-              <Typography gutterBottom>{this.props.name}</Typography>
+              <Typography>{this.props.name}</Typography>
               <Typography>{this.props.brand}</Typography>
-              <Typography variant="body">
-                well meaning and kindly.
-                <br />
-                {this.props.price}
-              </Typography>
+              <Typography>{this.props.price}</Typography>
             </CardContent>
-            <CardActions>
-              <Button>Learn More</Button>
-            </CardActions>
-          </React.Fragment>
-        </Card>
-      </Box>
+          </CardActionArea>
+          <CardActions>
+            <Button>Learn More</Button>
+          </CardActions>
+        </React.Fragment>
+      </Card>
     );
   }
 }
