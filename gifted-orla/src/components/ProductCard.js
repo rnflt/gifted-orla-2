@@ -9,9 +9,14 @@ import { CardActionArea, CardMedia } from "@mui/material";
 class ProductCard extends React.Component {
   render() {
     return (
-      <Card>
+      <Card sx={{ display: "flex", flexDirection: "row" }}>
         <React.Fragment>
-          <CardActionArea sx={{ display: "flex", flexDirection: "row" }}>
+          <CardActionArea
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
             <CardMedia
               component="img"
               sx={{ width: "150px" }}
@@ -25,10 +30,11 @@ class ProductCard extends React.Component {
               </Typography>
               <Typography>{this.props.price}</Typography>
             </CardContent>
-            <CardActions>
-              <Button>Learn More</Button>
-            </CardActions>
           </CardActionArea>
+          <CardActions sx={{ display: "flex", flexDirection: "column" }}>
+            <Button>Add to List</Button>
+            <Button>Learn More</Button>
+          </CardActions>
         </React.Fragment>
       </Card>
     );

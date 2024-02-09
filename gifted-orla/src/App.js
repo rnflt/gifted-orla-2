@@ -1,5 +1,6 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import ProductList from "./components/ProductList";
+import NavBar from "./components/NavBar";
 import { products } from "./data/DummyData";
 import * as React from "react";
 
@@ -11,6 +12,7 @@ function App() {
         <h1>My Products</h1>
       </header>
       <ProductList products={products} />
+      <NavBar />
     </React.Fragment>
   );
 }
