@@ -5,12 +5,12 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import RestoreIcon from "@mui/icons-material/Restore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { Paper } from "@mui/material";
 
 export default function NavBar() {
   const [value, setValue] = React.useState(0);
-
   return (
-    <Box sx={{ width: 500 }}>
+    <Paper sx={{ width: 500, position: "fixed", bottom: 0, left: 0, right: 0 }}>
       <BottomNavigation
         showLabels
         value={value}
@@ -22,6 +22,6 @@ export default function NavBar() {
         <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
         <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
       </BottomNavigation>
-    </Box>
+    </Paper>
   );
 }
