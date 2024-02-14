@@ -39,10 +39,10 @@ function App() {
       <header className="header">
         <h1>MYAPP</h1>
       </header>
-      <NavBar />
       <AppRoutes />
       <firebaseApp />
       <div id="firebaseui-auth-container"></div>
+      <NavBar />
     </React.Fragment>
   );
 }
