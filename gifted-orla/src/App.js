@@ -1,7 +1,5 @@
 import CssBaseline from "@mui/material/CssBaseline";
-import ProductList from "./components/ProductList";
 import NavBar from "./components/NavBar";
-import { products } from "./data/DummyData";
 import * as React from "react";
 import ui from "./components/AuthUI";
 import {
@@ -10,6 +8,7 @@ import {
   TwitterAuthProvider,
   EmailAuthProvider,
 } from "firebase/auth";
+import AppRoutes from "./Routes";
 
 const uiConfig = {
   signInSuccessUrl: "<url-to-redirect-to-on-success>",
@@ -38,10 +37,10 @@ function App() {
     <React.Fragment>
       <CssBaseline />
       <header className="header">
-        <h1>My Products</h1>
+        <h1>MYAPP</h1>
       </header>
-      <ProductList products={products} />
       <NavBar />
+      <AppRoutes />
       <firebaseApp />
       <div id="firebaseui-auth-container"></div>
     </React.Fragment>
