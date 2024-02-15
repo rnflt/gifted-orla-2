@@ -4,7 +4,13 @@ import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../components/AuthProvider";
 
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../components/Firestore";
+
 function Home() {
+  // TODO: Lad products trække fra db.
+  const querySnapshot = getDocs(collection(db, "Products"));
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
