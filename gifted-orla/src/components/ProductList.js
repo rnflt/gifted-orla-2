@@ -6,7 +6,7 @@ class ProductList extends Component {
     const products = this.props.products;
     return products.map((product) => (
       <ProductCard
-        id={product.id}
+        key={product.key}
         brand={product.brand}
         name={product.name}
         price={product.price}
