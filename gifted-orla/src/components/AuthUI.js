@@ -1,4 +1,4 @@
-import auth from "./AuthProvider";
+import { auth } from "./AuthProvider";
 import "firebaseui/dist/firebaseui.css";
 import * as firebaseui from "firebaseui";
 import {
@@ -8,7 +8,7 @@ import {
   EmailAuthProvider,
 } from "firebase/auth";
 
-const uiConfig = {
+export const uiConfig = {
   signInSuccessUrl: "<url-to-redirect-to-on-success>",
   signInOptions: [
     // Leave the lines as is for the providers you want to offer your users.
@@ -28,6 +28,6 @@ const uiConfig = {
   },
 };
 
-var ui = new firebaseui.auth.AuthUI(auth);
+var AuthUI = new firebaseui.auth.AuthUI(auth);
 
-export default ui;
+export default AuthUI;
