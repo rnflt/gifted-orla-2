@@ -1,26 +1,14 @@
 import ProductList from "../components/ProductList";
-//import { products } from "../data/DummyData";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../components/AuthProvider";
-import { getDocs, collection } from "firebase/firestore";
-import { db } from "../components/Firestore";
+import fetchData from "../components/FetchData";
 
 function Home() {
   const [products, setProducts] = useState([]);
 
-  const fetchProducts = async () => {
-    await getDocs(collection(db, "Products")).then((Snapshot) => {
-      const data = Snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setProducts(data);
-    });
-  };
-
   useEffect(() => {
-    fetchProducts();
+    fetchData("Products", setProducts);
   }, []);
 
   useEffect(() => {
@@ -38,6 +26,7 @@ function Home() {
       }
     });
   }, []);
+
   return products ? (
     <ProductList products={products} />
   ) : (
