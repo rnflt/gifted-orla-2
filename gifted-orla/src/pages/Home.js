@@ -1,15 +1,27 @@
 import ProductList from "../components/ProductList";
-import { products } from "../data/DummyData";
-import { useEffect } from "react";
+//import { products } from "../data/DummyData";
+import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../components/AuthProvider";
-
-import { collection, getDocs } from "firebase/firestore";
+import { getDocs, collection } from "firebase/firestore";
 import { db } from "../components/Firestore";
 
 function Home() {
-  // TODO: Lad products trække fra db.
-  const querySnapshot = getDocs(collection(db, "Products"));
+  const [products, setProducts] = useState([]);
+
+  const fetchProducts = async () => {
+    await getDocs(collection(db, "Products")).then((Snapshot) => {
+      const data = Snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setProducts(data);
+    });
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -26,7 +38,11 @@ function Home() {
       }
     });
   }, []);
-  return <ProductList products={products} />;
+  return products ? (
+    <ProductList products={products} />
+  ) : (
+    <span>Loading...</span>
+  );
 }
 
 export default Home;

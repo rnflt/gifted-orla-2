@@ -6,10 +6,10 @@ class ProductList extends Component {
     const products = this.props.products;
     return products.map((product) => (
       <ProductCard
-        key={product.key}
-        brand={product.brand}
-        name={product.name}
-        price={product.price}
+        key={product.Key}
+        brand={product.Brand}
+        name={product.Name}
+        price={product.Price}
       />
     ));
   }
