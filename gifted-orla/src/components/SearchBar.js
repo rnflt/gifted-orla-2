@@ -7,8 +7,8 @@ function SearchBar({ details }) {
 
   const filteredProducts = details.filter((product) => {
     return (
-      product.name.toLowerCase().includes(searchField.toLowerCase()) ||
-      product.brand.toLowerCase().includes(searchField.toLowerCase())
+      product.Name.toLowerCase().includes(searchField.toLowerCase()) ||
+      product.Brand.toLowerCase().includes(searchField.toLowerCase())
     );
   });
 
