@@ -4,8 +4,7 @@ import * as firebaseui from "firebaseui";
 import { GoogleAuthProvider, EmailAuthProvider } from "firebase/auth";
 
 export const uiConfig = {
-  // TODO sign in URL
-  signInSuccessUrl: "<url-to-redirect-to-on-success>",
+  signInSuccessUrl: window.location.href,
   signInOptions: [
     // Leave the lines as is for the providers you want to offer your users.
     GoogleAuthProvider.PROVIDER_ID,
