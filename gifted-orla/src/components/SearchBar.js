@@ -17,7 +17,11 @@ function SearchBar({ details }) {
   };
 
   function searchList() {
-    return <ProductList products={filteredProducts} />;
+    return filteredProducts.length > 0 ? (
+      <ProductList products={filteredProducts} />
+    ) : (
+      <span>Couldn't find any products...</span>
+    );
   }
 
   return (
