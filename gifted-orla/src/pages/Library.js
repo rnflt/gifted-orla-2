@@ -1,14 +1,46 @@
 import React, { useEffect } from "react";
 import { uiConfig } from "../components/AuthUI";
 import AuthUI from "../components/AuthUI";
+import { auth } from "../components/AuthProvider";
+import { onAuthStateChanged } from "firebase/auth";
+import { Button } from "@mui/material";
 
 const Library = () => {
   useEffect(() => {
-    AuthUI.start("#firebaseui-auth-container", uiConfig);
-  });
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        // ...
+        console.log("uid", uid);
+        document.getElementById("user-signed-in").style.display = "block";
+      } else {
+        // User is signed out
+        AuthUI.start("#firebaseui-auth-container", uiConfig);
+      }
+    });
+  }, []);
+
   return (
     <div>
       <h1>Library</h1>
+      <div
+        id="user-signed-in"
+        style={{
+          display: "none",
+        }}
+      >
+        <Button
+          id="logout-button"
+          variant="outlined"
+          onClick={() => {
+            auth.signOut();
+          }}
+        >
+          Logout
+        </Button>
+      </div>
       <div id="firebaseui-auth-container"></div>
     </div>
   );
