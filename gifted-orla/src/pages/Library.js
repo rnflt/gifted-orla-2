@@ -18,6 +18,7 @@ const Library = () => {
       } else {
         // User is signed out
         AuthUI.start("#firebaseui-auth-container", uiConfig);
+        document.getElementById("user-signed-in").style.display = "none";
       }
     });
   }, []);
