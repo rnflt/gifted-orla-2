@@ -27,7 +27,7 @@ function Home() {
     });
   }, []);
 
-  return products ? (
+  return products.length > 0 ? (
     <ProductList products={products} />
   ) : (
     <span>Loading...</span>

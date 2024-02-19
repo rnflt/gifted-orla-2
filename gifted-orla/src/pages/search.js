@@ -13,7 +13,11 @@ const Search = () => {
   return (
     <div>
       <h1>Search - here a range of categories will be shown</h1>
-      {products ? <SearchBar details={products} /> : <span>Loading...</span>}
+      {products.length > 0 ? (
+        <SearchBar details={products} />
+      ) : (
+        <span>Loading...</span>
+      )}
     </div>
   );
 };
