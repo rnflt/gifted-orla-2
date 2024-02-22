@@ -3,6 +3,8 @@ import { uiConfig } from "../components/AuthUI";
 import AuthUI from "../components/AuthUI";
 import { auth } from "../components/AuthProvider";
 import { onAuthStateChanged } from "firebase/auth";
+import { db } from "../components/Firestore";
+import { doc, getDoc, collection, setDoc } from "firebase/firestore";
 import { Button } from "@mui/material";
 
 const Library = () => {
@@ -15,6 +17,16 @@ const Library = () => {
         // ...
         console.log("uid", uid);
         document.getElementById("user-signed-in").style.display = "block";
+
+        const docRef = doc(db, "Users", uid);
+
+        const docSnap = getDoc(docRef).then((doc) => {
+          doc._document
+            ? console.log("found") // TODO: Hent lister
+            : setDoc(docRef, {
+                name: uid,
+              });
+        });
       } else {
         // User is signed out
         AuthUI.start("#firebaseui-auth-container", uiConfig);
