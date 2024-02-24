@@ -1,13 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { uiConfig } from "../components/AuthUI";
 import AuthUI from "../components/AuthUI";
 import { auth } from "../components/AuthProvider";
 import { onAuthStateChanged } from "firebase/auth";
 import { db } from "../components/Firestore";
-import { doc, getDoc, collection, setDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  collection,
+  setDoc,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { Button } from "@mui/material";
 
 const Library = () => {
+  const [lists, setLists] = useState([]);
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -18,14 +28,24 @@ const Library = () => {
         console.log("uid", uid);
         document.getElementById("user-signed-in").style.display = "block";
 
-        const docRef = doc(db, "Users", uid);
+        const userRef = doc(db, "Users", uid);
 
-        const docSnap = getDoc(docRef).then((doc) => {
+        const docSnap = getDoc(userRef).then((doc) => {
           doc._document
-            ? console.log("found") // TODO: Hent lister
-            : setDoc(docRef, {
+            ? console.log("Found user")
+            : setDoc(userRef, {
                 name: uid,
               });
+        });
+
+        // get lists
+        const q = query(collection(db, "Lists"), where("user", "==", uid));
+        getDocs(q).then((Snapshot) => {
+          const data = Snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setLists(data);
         });
       } else {
         // User is signed out
@@ -52,6 +72,18 @@ const Library = () => {
           }}
         >
           Logout
+        </Button>
+        <Button
+          id="create-list-button"
+          variant="outlined"
+          onClick={() => {
+            setDoc(doc(collection(db, "Lists")), {
+              user: auth.currentUser.uid,
+              name: "New List",
+            });
+          }}
+        >
+          Create list
         </Button>
       </div>
       <div id="firebaseui-auth-container"></div>
