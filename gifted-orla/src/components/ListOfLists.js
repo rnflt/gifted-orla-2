@@ -3,8 +3,10 @@ import ListCard from "./ListCard";
 
 class ListOfLists extends Component {
   render() {
-    const list = this.props.list;
-    return list.map((list) => <ListCard key={list.id} name={list.name} />);
+    const lists = this.props.lists;
+    return lists.map((list) => (
+      <ListCard key={list.id} id={list.id} name={list.name} />
+    ));
   }
 }
 export default ListOfLists;

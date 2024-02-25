@@ -47,6 +47,7 @@ const Library = () => {
             ...doc.data(),
           }));
           setLists(data);
+          console.log("data", data);
         });
       } else {
         // User is signed out
@@ -86,7 +87,7 @@ const Library = () => {
         >
           Create list
         </Button>
-        <ListOfLists list={lists} />
+        <ListOfLists lists={lists} />
       </div>
       <div id="firebaseui-auth-container"></div>
     </div>

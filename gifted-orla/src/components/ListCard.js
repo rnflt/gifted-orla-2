@@ -5,6 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { CardActionArea, CardMedia } from "@mui/material";
+import { Link } from "react-router-dom";
 
 class ListCard extends React.Component {
   render() {
@@ -16,6 +17,8 @@ class ListCard extends React.Component {
               display: "flex",
               flexDirection: "row",
             }}
+            component={Link}
+            to={"/list/" + this.props.id}
           >
             <CardMedia
               component="img"
