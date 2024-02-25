@@ -14,6 +14,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { Button } from "@mui/material";
+import ListOfLists from "../components/ListOfLists";
 
 const Library = () => {
   const [lists, setLists] = useState([]);
@@ -85,6 +86,7 @@ const Library = () => {
         >
           Create list
         </Button>
+        <ListOfLists list={lists} />
       </div>
       <div id="firebaseui-auth-container"></div>
     </div>
