@@ -27,9 +27,6 @@ class ListCard extends React.Component {
               <Typography variant="h5">{this.props.name}</Typography>
             </CardContent>
           </CardActionArea>
-          <CardActions sx={{ display: "flex", flexDirection: "column" }}>
-            <Button>View List</Button>
-          </CardActions>
         </React.Fragment>
       </Card>
     );
