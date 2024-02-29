@@ -2,9 +2,11 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { CardActionArea, CardMedia } from "@mui/material";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import IconButton from "@mui/material/IconButton";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 class ProductCard extends React.Component {
   render() {
@@ -32,8 +34,8 @@ class ProductCard extends React.Component {
             </CardContent>
           </CardActionArea>
           <CardActions sx={{ display: "flex", flexDirection: "column" }}>
-            <Button>Add to List</Button>
-            <Button>Learn More</Button>
+            <IconButton ><AddCircleOutlineIcon /></IconButton>
+            <IconButton><MoreHorizIcon /></IconButton>
           </CardActions>
         </React.Fragment>
       </Card>
