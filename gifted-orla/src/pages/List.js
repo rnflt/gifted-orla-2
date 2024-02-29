@@ -3,12 +3,15 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../components/AuthProvider";
 import { db } from "../components/Firestore";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
 import { useParams } from "react-router-dom";
+import { Button } from "@mui/material";
 
 function List() {
   const [products, setProducts] = useState([]);
   let { listId } = useParams();
+  const [list, setList] = useState([]);
+  const [uid, setUid] = useState("");
 
   useEffect(() => {
     console.log(listId);
@@ -23,6 +26,19 @@ function List() {
       }));
       setProducts(data);
       console.log(data);
+    });
+
+    const listRef = doc(db, "Lists", listId);
+
+    const docSnap = getDoc(listRef).then((doc) => {
+      const data = {id: doc.id, ...doc.data()};
+      setList(data);
+      console.log(data.user);
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      setUid(user.uid);
+      
     });
   }, []);
 
