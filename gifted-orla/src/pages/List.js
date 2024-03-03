@@ -5,7 +5,6 @@ import { auth } from "../components/AuthProvider";
 import { db } from "../components/Firestore";
 import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
 import { useParams } from "react-router-dom";
-import { Button } from "@mui/material";
 
 function List() {
   const [products, setProducts] = useState([]);

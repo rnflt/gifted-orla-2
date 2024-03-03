@@ -7,6 +7,7 @@ import { CardActionArea, CardMedia } from "@mui/material";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import IconButton from "@mui/material/IconButton";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import DropdownLists from "./DropdownLists";
 
 class ProductCard extends React.Component {
   render() {
@@ -34,7 +35,7 @@ class ProductCard extends React.Component {
             </CardContent>
           </CardActionArea>
           <CardActions sx={{ display: "flex", flexDirection: "column" }}>
-            <IconButton ><AddCircleOutlineIcon /></IconButton>
+            <DropdownLists />
             <IconButton><MoreHorizIcon /></IconButton>
           </CardActions>
         </React.Fragment>
