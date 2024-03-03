@@ -46,7 +46,7 @@ class DropdownLists extends Component {
   };
 
   handleClose = () => {
-    this.setState({ anchorEl: null });
+    this.setState({ anchorEl: null, searchText: '', filteredLists: this.state.lists });
   };
 
   handleSearchChange = (event) => {
@@ -79,7 +79,10 @@ class DropdownLists extends Component {
           id="DropdownList"
           anchorEl={anchorEl}
           open={open}
-          onClose={this.handleClose}
+          onClose={() => {
+            this.handleClose();
+            this.setState({ searchText: '' }); // Clear search field
+          }}
           MenuListProps={{
             'aria-labelledby': 'basic-button',
           }}
