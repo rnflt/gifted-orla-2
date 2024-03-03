@@ -10,6 +10,7 @@ class ProductList extends Component {
         brand={product.Brand}
         name={product.Name}
         price={product.Price}
+        lists={product.lists}
       />
     ));
   }
