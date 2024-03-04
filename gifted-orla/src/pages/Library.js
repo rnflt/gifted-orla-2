@@ -13,11 +13,14 @@ import {
   where,
   getDocs,
 } from "firebase/firestore";
-import { Button } from "@mui/material";
+import { Button, TextField} from "@mui/material";
 import ListOfLists from "../components/ListOfLists";
 
 const Library = () => {
   const [lists, setLists] = useState([]);
+  const [creatingList, setCreatingList] = useState(false);
+  const [newListName, setNewListName] = useState("");
+
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -77,6 +80,29 @@ const Library = () => {
     });
   }, []);
 
+  const handleCreateList = async () => {
+    if (newListName.trim() !== "") {
+      const uid = auth.currentUser.uid;
+      await setDoc(doc(collection(db, "Lists")), {
+        user: uid,
+        name: newListName,
+      });
+
+      // Fetch lists again after creation
+      const q = query(collection(db, "Lists"), where("user", "==", uid));
+      const snapshot = await getDocs(q);
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setLists(data);
+
+      // Reset input field and flag
+      setNewListName("");
+      setCreatingList(false);
+    }
+  };
+
   return (
     <div>
       <h1>Library</h1>
@@ -95,18 +121,32 @@ const Library = () => {
         >
           Logout
         </Button>
-        <Button
-          id="create-list-button"
-          variant="outlined"
-          onClick={() => {
-            setDoc(doc(collection(db, "Lists")), {
-              user: auth.currentUser.uid,
-              name: "New List",
-            });
-          }}
-        >
-          Create list
-        </Button>
+        {!creatingList ? (
+          <Button
+            id="create-list-button"
+            variant="outlined"
+            onClick={() => {
+              setCreatingList(true);
+            }}
+          >
+            Create list
+          </Button>
+        ) : (
+          <div>
+            <TextField
+              label="List Name"
+              value={newListName}
+              onChange={(e) => setNewListName(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCreateList}
+            >
+              Confirm
+            </Button>
+          </div>
+        )}
         <ListOfLists lists={lists} />
       </div>
       <div id="firebaseui-auth-container"></div>
