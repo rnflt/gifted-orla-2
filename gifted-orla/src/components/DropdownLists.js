@@ -1,15 +1,16 @@
+import React, { Component} from "react";
+
 import {  Button, ListItemText, ListItemIcon, Menu, MenuItem, TextField} from "@mui/material";
-import React, { Component , useEffect, useState} from "react";
+import Divider from "@mui/material/Divider";
+import AddIcon from '@mui/icons-material/Add';
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../components/AuthProvider";
-import { collection, getDocs, doc, getDoc, query, where, addDoc, updateDoc, arrayRemove, arrayUnion} from "firebase/firestore";
+import { collection, getDocs, doc,  query, where, addDoc, updateDoc, arrayRemove, arrayUnion} from "firebase/firestore";
 import { db } from "./Firestore";
-import Divider from "@mui/material/Divider";
-
-import AddIcon from '@mui/icons-material/Add';
 
 class DropdownLists extends Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class DropdownLists extends Component {
       lists: [],
       newListName: '',
       creatingNewList: false,
+      userLoggedIn: false,
     };
   }
 
@@ -34,10 +36,11 @@ class DropdownLists extends Component {
             id: doc.id,
             ...doc.data(),
           }));
-          this.setState({ lists: data, filteredLists: data });
+          this.setState({ lists: data, filteredLists: data, userLoggedIn: true }); 
         });
       } else {
         // User is signed out
+        this.setState({ userLoggedIn: false }); 
       }
     });
   }
@@ -113,7 +116,7 @@ class DropdownLists extends Component {
   };
 
   render() {
-    const { anchorEl, filteredLists, searchText, newListName, creatingNewList  } = this.state;
+    const { anchorEl, filteredLists, searchText, newListName, creatingNewList, userLoggedIn } = this.state;
     const open = Boolean(anchorEl);
 
     return (
@@ -179,21 +182,29 @@ class DropdownLists extends Component {
             </MenuItem>
           )}
           <Divider />
-          {filteredLists.length > 0 ? (filteredLists.map((list) => (
-            <React.Fragment key={list.id}>
-              <MenuItem onClick={() => this.handleListClick(list.id)}>
-                <ListItemIcon>
-                  {this.props.product.lists.includes(list.id)
-                    ? <CheckBoxIcon />
-                    : <CheckBoxOutlineBlankIcon />
-                  }
-                </ListItemIcon>
-                <ListItemText>
-                  {list.name}
-                </ListItemText>
-              </MenuItem>
-            </React.Fragment>
-          ))) : <MenuItem>No Lists</MenuItem>}
+          {userLoggedIn ? (
+            filteredLists.length > 0 ? (
+              filteredLists.map((list) => (
+                <React.Fragment key={list.id}>
+                  <MenuItem onClick={() => this.handleListClick(list.id)}>
+                    <ListItemIcon>
+                      {this.props.product.lists.includes(list.id)
+                        ? <CheckBoxIcon />
+                        : <CheckBoxOutlineBlankIcon />
+                      }
+                    </ListItemIcon>
+                    <ListItemText>
+                      {list.name}
+                    </ListItemText>
+                  </MenuItem>
+                </React.Fragment>
+              ))
+            ) : <MenuItem>No Lists</MenuItem>
+          ) : (
+            <MenuItem>
+              Not logged in
+            </MenuItem>
+          )}
         </Menu>
       </div>
     );
