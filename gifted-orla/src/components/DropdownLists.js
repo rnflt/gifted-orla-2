@@ -8,7 +8,6 @@ import { auth } from "../components/AuthProvider";
 import { collection, getDocs, doc, getDoc, query, where, addDoc, updateDoc, arrayRemove, arrayUnion} from "firebase/firestore";
 import { db } from "./Firestore";
 import Divider from "@mui/material/Divider";
-import SearchIcon from '@mui/icons-material/Search';
 
 import AddIcon from '@mui/icons-material/Add';
 
