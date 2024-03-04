@@ -22,33 +22,53 @@ const Library = () => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
+        // user signed in
         const uid = user.uid;
-        // ...
-        console.log("uid", uid);
         document.getElementById("user-signed-in").style.display = "block";
 
         const userRef = doc(db, "Users", uid);
 
-        const docSnap = getDoc(userRef).then((doc) => {
-          doc._document
-            ? console.log("Found user")
-            : setDoc(userRef, {
-                name: uid,
-              });
+        const docSnap = getDoc(userRef).then((docu) => {
+          if (docu._document) {
+            console.log("Found user");   
+            // fetch lists
+            const q = query(collection(db, "Lists"), where("user", "==", uid));
+            getDocs(q).then((Snapshot) => {
+              const data = Snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+              }));
+              setLists(data);
+            });
+          } else {
+            setDoc(userRef, {
+              name: uid,
+            });
+
+            // Create "Wishlist" list
+            setDoc(doc(collection(db, "Lists")), {
+              user: uid,
+              name: "Wishlist",
+            });
+
+            // Create "My Gear" list
+            setDoc(doc(collection(db, "Lists")), {
+              user: uid,
+              name: "My Gear",
+            });
+
+            // fetch lists
+            const q = query(collection(db, "Lists"), where("user", "==", uid));
+            getDocs(q).then((Snapshot) => {
+              const data = Snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+              }));
+              setLists(data);
+            });
+          }
         });
 
-        // get lists
-        const q = query(collection(db, "Lists"), where("user", "==", uid));
-        getDocs(q).then((Snapshot) => {
-          const data = Snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setLists(data);
-          console.log("data", data);
-        });
       } else {
         // User is signed out
         AuthUI.start("#firebaseui-auth-container", uiConfig);
