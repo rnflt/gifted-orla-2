@@ -5,7 +5,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../components/AuthProvider";
-import { collection, getDocs, query, where, addDoc} from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, query, where, addDoc, updateDoc, arrayRemove, arrayUnion} from "firebase/firestore";
 import { db } from "./Firestore";
 import Divider from "@mui/material/Divider";
 import SearchIcon from '@mui/icons-material/Search';
@@ -17,9 +17,9 @@ class DropdownLists extends Component {
     super(props);
     this.state = {
       anchorEl: null,
-      lists: [],
       searchText: '',
       filteredLists: [],
+      lists: [],
       newListName: '',
       creatingNewList: false,
     };
@@ -85,6 +85,31 @@ class DropdownLists extends Component {
       } catch (error) {
         console.error("Error adding list: ", error);
       }
+    }
+  };
+
+  handleListClick = async (listId) => {
+    const  productId  = this.props.product.id;
+    const { lists } = this.state;
+
+    
+    try {
+      // Check if the product already has the list ID
+      const productRef = doc(db, "Products", productId);
+      const productData = this.props.product;
+        if (productData.lists && productData.lists.includes(listId)) {
+          // Remove the list ID
+          await updateDoc(productRef, {
+            lists: arrayRemove(listId)
+          });
+        } else {
+          // Add the list ID
+          await updateDoc(productRef, {
+            lists: arrayUnion(listId)
+          });
+        }
+      } catch (error) {
+      console.error("Error updating product lists: ", error);
     }
   };
 
@@ -157,12 +182,16 @@ class DropdownLists extends Component {
           <Divider />
           {filteredLists.length > 0 ? (filteredLists.map((list) => (
             <React.Fragment key={list.id}>
-              {this.props.selectedLists.includes(list.id)
-                ? <CheckBoxIcon />
-                : <CheckBoxOutlineBlankIcon />
-              }
-              <MenuItem onClick={this.handleClose}>
-                {list.name}
+              <MenuItem onClick={() => this.handleListClick(list.id)}>
+                <ListItemIcon>
+                  {this.props.product.lists.includes(list.id)
+                    ? <CheckBoxIcon />
+                    : <CheckBoxOutlineBlankIcon />
+                  }
+                </ListItemIcon>
+                <ListItemText>
+                  {list.name}
+                </ListItemText>
               </MenuItem>
             </React.Fragment>
           ))) : <MenuItem>No Lists</MenuItem>}

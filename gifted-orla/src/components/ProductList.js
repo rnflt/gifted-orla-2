@@ -11,6 +11,7 @@ class ProductList extends Component {
         name={product.Name}
         price={product.Price}
         lists={product.lists}
+        id={product.id}
       />
     ));
   }

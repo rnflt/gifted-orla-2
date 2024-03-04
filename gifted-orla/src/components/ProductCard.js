@@ -35,7 +35,7 @@ class ProductCard extends React.Component {
             </CardContent>
           </CardActionArea>
           <CardActions sx={{ display: "flex", flexDirection: "column" }}>
-            <DropdownLists selectedLists={this.props.lists} />
+            <DropdownLists product={this.props} />
             <IconButton><MoreHorizIcon /></IconButton>
           </CardActions>
         </React.Fragment>
