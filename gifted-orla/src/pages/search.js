@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import SearchBar from "../components/SearchBar";
-import fetchData from "../components/FetchData";
+import fetchData from "../service/FetchData";
 
 const Search = () => {
   const [products, setProducts] = useState([]);

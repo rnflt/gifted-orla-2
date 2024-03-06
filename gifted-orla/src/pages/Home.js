@@ -4,7 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import ProductList from "../components/ProductList";
 
 import { auth } from "../components/AuthProvider";
-import fetchData from "../components/FetchData";
+import fetchData from "../service/FetchData";
 
 function Home() {
   const [products, setProducts] = useState([]);
