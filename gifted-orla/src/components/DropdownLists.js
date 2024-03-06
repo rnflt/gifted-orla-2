@@ -10,8 +10,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, getDocs, doc,  query, where, addDoc, updateDoc, arrayRemove, arrayUnion} from "firebase/firestore";
 
-import { auth } from "../service/AuthProvider";
-import { db } from "../service/Firestore";
+import { auth, db } from "../service/firebase";
 
 class DropdownLists extends Component {
   constructor(props) {

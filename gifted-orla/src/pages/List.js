@@ -5,8 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
 
 import ProductList from "../components/ProductList";
-import { auth } from "../service/AuthProvider";
-import { db } from "../service/Firestore";
+import { auth, db } from "../service/firebase";
 
 
 

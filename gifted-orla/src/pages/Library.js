@@ -17,8 +17,7 @@ import {
 import ListOfLists from "../components/ListOfLists";
 
 import AuthUI, { uiConfig } from "../service/AuthUI";
-import { auth } from "../service/AuthProvider";
-import { db } from "../service/Firestore";
+import { auth, db } from "../service/firebase";
 
 const Library = () => {
   const [lists, setLists] = useState([]);

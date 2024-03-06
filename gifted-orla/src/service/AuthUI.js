@@ -1,4 +1,4 @@
-import { auth } from "./AuthProvider";
+import { auth } from "./firebase";
 import "firebaseui/dist/firebaseui.css";
 import * as firebaseui from "firebaseui";
 import { GoogleAuthProvider, EmailAuthProvider } from "firebase/auth";
