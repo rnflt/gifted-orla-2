@@ -19,7 +19,7 @@ function List() {
     console.log(listId);
     const q = query(
       collection(db, "Products"),
-      where("list", "array-contains", listId),
+      where("lists", "array-contains", listId),
     );
     getDocs(q).then((Snapshot) => {
       const data = Snapshot.docs.map((doc) => ({
