@@ -1,7 +1,8 @@
-import CssBaseline from "@mui/material/CssBaseline";
-import NavBar from "./components/NavBar";
 import * as React from "react";
 import AppRoutes from "./Routes";
+import CssBaseline from "@mui/material/CssBaseline";
+
+import NavBar from "./layout/NavBar";
 
 function App() {
   return (
