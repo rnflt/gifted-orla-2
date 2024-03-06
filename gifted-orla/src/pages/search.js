@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
 import SearchBar from "../components/SearchBar";
-import { useEffect, useState } from "react";
 import fetchData from "../components/FetchData";
 
 const Search = () => {

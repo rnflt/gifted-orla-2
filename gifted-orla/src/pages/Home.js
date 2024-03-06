@@ -1,6 +1,8 @@
-import ProductList from "../components/ProductList";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
+
+import ProductList from "../components/ProductList";
+
 import { auth } from "../components/AuthProvider";
 import fetchData from "../components/FetchData";
 

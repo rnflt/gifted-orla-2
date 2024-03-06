@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { uiConfig } from "../components/AuthUI";
-import AuthUI from "../components/AuthUI";
-import { auth } from "../components/AuthProvider";
+import { Button, TextField} from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
-import { db } from "../components/Firestore";
 import {
   doc,
   getDoc,
@@ -13,8 +10,11 @@ import {
   where,
   getDocs,
 } from "firebase/firestore";
-import { Button, TextField} from "@mui/material";
+
 import ListOfLists from "../components/ListOfLists";
+import AuthUI, { uiConfig } from "../components/AuthUI";
+import { auth } from "../components/AuthProvider";
+import { db } from "../components/Firestore";
 
 const Library = () => {
   const [lists, setLists] = useState([]);

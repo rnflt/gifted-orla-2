@@ -1,10 +1,13 @@
-import ProductList from "../components/ProductList";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
+import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
+
+import ProductList from "../components/ProductList";
 import { auth } from "../components/AuthProvider";
 import { db } from "../components/Firestore";
-import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
-import { useParams } from "react-router-dom";
+
+
 
 function List() {
   const [products, setProducts] = useState([]);
