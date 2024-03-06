@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ProductList from "./ProductList";
-import { TextField } from "@mui/material";
+import TextField from "@mui/material/TextField";
 
 function SearchBar({ details }) {
   const [searchField, setSearchField] = useState("");

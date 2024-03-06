@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Button, TextField} from "@mui/material";
+
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+
 import { onAuthStateChanged } from "firebase/auth";
 import {
   doc,
@@ -12,6 +15,7 @@ import {
 } from "firebase/firestore";
 
 import ListOfLists from "../components/ListOfLists";
+
 import AuthUI, { uiConfig } from "../service/AuthUI";
 import { auth } from "../service/AuthProvider";
 import { db } from "../service/Firestore";
