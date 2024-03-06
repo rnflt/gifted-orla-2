@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import BottomNavigation from "@mui/material/BottomNavigation";
@@ -10,7 +10,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 
 export default function NavBar() {
-  const [value, setValue] = React.useState(0);
+  const location = useLocation();
+  const [value, setValue] = useState(location.pathname);
+
   return (
     <Paper
       sx={{
@@ -22,7 +24,7 @@ export default function NavBar() {
       }}
     >
       <BottomNavigation
-        value={useLocation().pathname}
+        value={value}
         showLabels
         onChange={(event, newValue) => {
           setValue(newValue);
