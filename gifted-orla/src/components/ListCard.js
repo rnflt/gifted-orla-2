@@ -7,13 +7,13 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 
 
-const ListCard = (props) => {
+const ListCard = ({id, name}) => {
   return (
     <Card sx={{ display: "flex", flexDirection: "row" }}>
         <CardActionArea
           sx={{display: "flex", flexDirection: "row",}}
           component={Link}
-          to={"/list/" + props.id}
+          to={`/list/${id}`}
         >
           <CardMedia
             component="img"
@@ -22,7 +22,7 @@ const ListCard = (props) => {
             alt="green iguana"
           />
           <CardContent sx={{ flex: "1 0 auto" }}>
-            <Typography variant="h5">{props.name}</Typography>
+            <Typography variant="h5">{name}</Typography>
           </CardContent>
         </CardActionArea>
     </Card>
