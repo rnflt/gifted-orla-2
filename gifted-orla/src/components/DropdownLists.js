@@ -8,9 +8,9 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../components/AuthProvider";
+import { auth } from "../service/AuthProvider";
 import { collection, getDocs, doc,  query, where, addDoc, updateDoc, arrayRemove, arrayUnion} from "firebase/firestore";
-import { db } from "./Firestore";
+import { db } from "../service/Firestore";
 
 class DropdownLists extends Component {
   constructor(props) {

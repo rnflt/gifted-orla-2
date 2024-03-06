@@ -22,7 +22,7 @@ class ProductCard extends React.Component {
             <CardMedia
               component="img"
               sx={{ width: "150px" }}
-              image={require("./house.jpg")}
+              image={require("../assets/house.jpg")}
               alt="green iguana"
             />
             <CardContent sx={{ flex: "1 0 auto" }}>
