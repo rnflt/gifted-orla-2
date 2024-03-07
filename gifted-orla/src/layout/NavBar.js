@@ -9,7 +9,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 
-export default function NavBar() {
+const NavBar = () => {
   const location = useLocation();
   const [value, setValue] = useState(location.pathname);
 
@@ -55,3 +55,5 @@ export default function NavBar() {
     </Paper>
   );
 }
+
+export default NavBar

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
 
-function SearchBar({ onSearch }) {
+const SearchBar = ({ onSearch }) => {
   const [searchField, setSearchField] = useState("");
 
   const handleChange = (e) => {

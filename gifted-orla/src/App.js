@@ -4,7 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 import NavBar from "./layout/NavBar";
 
-function App() {
+const App = () => {
   return (
     <React.Fragment>
       <CssBaseline />

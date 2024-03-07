@@ -9,7 +9,7 @@ import { auth, db } from "../service/firebase";
 
 
 
-function ListPage() {
+const ListPage = () => {
   const [products, setProducts] = useState([]);
   let { listId } = useParams();
   const [list, setList] = useState([]);
