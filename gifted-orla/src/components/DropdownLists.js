@@ -12,7 +12,7 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 import { onAuthStateChanged } from "firebase/auth";
-import {arrayRemove, arrayUnion } from "firebase/firestore";
+import {arrayRemove, arrayUnion, onSnapshot } from "firebase/firestore";
 import { ProductService, ListService } from "../service/DatabaseService";
 import { auth } from "../service/firebase";
 
@@ -26,20 +26,24 @@ const DropdownLists = ({ product }) => {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
         ListService.getWhere('user', "==", uid).then((data) => {
-          setLists(data);
-          setFilteredLists(data);
+          const lists = data.map(list => ({ ...list, selected: list.products.includes(product.id) }));
+          setLists(lists);
+          setFilteredLists(lists);
           setUserLoggedIn(true);
         });
+
       } else {
         setUserLoggedIn(false);
       }
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeAuth();
+    }
   }, []);
 
   const handleClick = (event) => {
@@ -71,35 +75,32 @@ const DropdownLists = ({ product }) => {
         const docRef = await ListService.create({
           name: newListName,
           user: auth.currentUser.uid,
+          products: [],
         });
-        console.log("List added with ID: ", docRef.id);
-        
-        const newList = {
-          id: docRef.id,
-          name: newListName
-        };
-        const updatedLists = [...lists, newList];
+        const doc = await ListService.getOne(docRef);
+        setLists(lists => [...lists, doc]);
+        setFilteredLists(filteredLists => [...filteredLists, doc]);
         setNewListName('');
         setCreatingNewList(false);
-        setLists(updatedLists);
-        setFilteredLists(updatedLists);
       } catch (error) {
         console.error("Error adding list: ", error);
       }
     }
   };
 
-  const handleListClick = async (listId) => {
+  const handleListClick = async (list) => {
+    const updatedLists = lists.map(l =>
+      l.id === list.id ? { ...list, selected: !list.selected } : l);
+    setLists(updatedLists);
+    setFilteredLists(updatedLists);
     try {
-      const productData = product;
-      if (productData.lists && productData.lists.includes(listId)) {
-        await ProductService.update(product.id, {
-          lists: arrayRemove(listId)
-        });
+      if (list.products.includes(product.id)) {
+        await ProductService.update(product.id, {lists: arrayRemove(list.id)});
+        await ListService.update(list.id, {products: arrayRemove(product.id)})
+        
       } else {
-        await ProductService.update(product.id, {
-          lists: arrayUnion(listId)
-        });
+        await ProductService.update(product.id, {lists: arrayUnion(list.id)});
+        await ListService.update(list.id, {products: arrayUnion(product.id)});
       }
     } catch (error) {
       console.error("Error updating product lists: ", error);
@@ -174,12 +175,9 @@ const DropdownLists = ({ product }) => {
         {userLoggedIn ? (
           filteredLists.length > 0 ? (
             filteredLists.map((list) => (
-                <MenuItem key={list.id} onClick={() => handleListClick(list.id)}>
+                <MenuItem key={list.id} onClick={() => handleListClick(list)}>
                   <ListItemIcon>
-                    {product.lists.includes(list.id)
-                      ? <CheckBoxIcon />
-                      : <CheckBoxOutlineBlankIcon />
-                    }
+                    {list.selected ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
                   </ListItemIcon>
                   <ListItemText>
                     {list.name}

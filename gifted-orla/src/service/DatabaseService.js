@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { collection, getDocs, query, where, updateDoc, doc , addDoc} from "firebase/firestore";
+import { collection, getDocs, query, where, updateDoc, doc , addDoc, onSnapshot, getDoc} from "firebase/firestore";
 
 class DatabaseService {
   collection;
@@ -21,7 +21,7 @@ class DatabaseService {
   };
 
   getWhere = async (queryCriteria, queryCondition, queryCheck) => {
-    const q = query(this.collection, where(queryCriteria, queryCondition, queryCheck ) )
+    const q = this.getQuery(queryCriteria, queryCondition, queryCheck);
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => {
       return {
@@ -31,12 +31,17 @@ class DatabaseService {
     });
   }
 
+  getQuery = (queryCriteria, queryCondition, queryCheck) => {
+    return query(this.collection, where(queryCriteria, queryCondition, queryCheck ))
+  };
+
   // returns a single document in object format
-  getOne = async ({ queryKey }) => {
-    const { id } = queryKey[1];
-    if (!id) return; // entity form is in create mode
-    const snapshot = await this.collection.doc(id).get();
-    return snapshot.data();
+  getOne = async (ref) => {
+    const snap = await getDoc(ref);
+    return {
+      id: ref.id,
+      ...snap.data(),
+    }
   };
 
   // resolve a relation, returns the referenced document
@@ -47,6 +52,10 @@ class DatabaseService {
   // save a new document in the database
   create = async (data) => {
     return await addDoc(this.collection, data);
+  };
+
+  onSnapshot = (func) => {
+    onSnapshot(this.collection, func)
   };
 
   // update an existing document with new data
