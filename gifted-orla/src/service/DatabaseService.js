@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { collection, getDocs, query, where, updateDoc, doc } from "firebase/firestore";
+import { collection, getDocs, query, where, updateDoc, doc , addDoc} from "firebase/firestore";
 
 class DatabaseService {
   collection;
@@ -46,7 +46,7 @@ class DatabaseService {
 
   // save a new document in the database
   create = async (data) => {
-    return await this.collection.add(data);
+    return await addDoc(this.collection, data);
   };
 
   // update an existing document with new data
@@ -57,7 +57,7 @@ class DatabaseService {
 
   // delete an existing document from the collection
   remove = async (id) => {
-    return await this.collection.doc(id).delete();
+    console.log("Not implemented yet")
   };
 }
 
