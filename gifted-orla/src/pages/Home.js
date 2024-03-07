@@ -1,20 +1,35 @@
-import { useEffect, useState } from "react";
-
+import React, { useEffect, useState } from "react";
 import ProductList from "../components/ProductList";
-
-import fetchData from "../service/FetchData";
+import { ProductService } from "../service/DatabaseService";
 
 function Home() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchData("Products", setProducts);
+    const fetchProducts = async () => {
+      try {
+        const data = await ProductService.getAll();
+        setProducts(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setLoading(false);
+      }
+    };
+    
+    fetchProducts();
+
   }, []);
 
-  return products.length > 0 ? (
-    <ProductList products={products} />
-  ) : (
-    <span>Loading...</span>
+  return (
+    <>
+      {loading ? (
+        <span>Loading...</span>
+      ) : (
+        <ProductList products={products} />
+      )}
+    </>
   );
 }
 
