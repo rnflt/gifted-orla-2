@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import ProductList from "../components/ProductList";
 import { ProductService } from "../service/DatabaseService";
+import SearchBar from "../components/SearchBar";
 
-const Home = () => {
+const SearchPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,13 +24,14 @@ const Home = () => {
 
   return (
     <>
+      <h1>Search - here a range of categories will be shown</h1>
       {loading ? (
         <span>Loading...</span>
       ) : (
-        <ProductList products={products} />
+        <SearchBar products={products} />
       )}
     </>
   );
 }
 
-export default Home;
+export default SearchPage;
