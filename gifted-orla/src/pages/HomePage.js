@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ProductList from "../components/ProductList";
 import { ProductService } from "../service/DatabaseService";
 
-const Home = () => {
+const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,4 +33,4 @@ const Home = () => {
   );
 }
 
-export default Home;
+export default HomePage;

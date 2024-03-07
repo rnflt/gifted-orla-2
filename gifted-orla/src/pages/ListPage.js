@@ -9,7 +9,7 @@ import { auth, db } from "../service/firebase";
 
 
 
-function List() {
+function ListPage() {
   const [products, setProducts] = useState([]);
   let { listId } = useParams();
   const [list, setList] = useState([]);
@@ -51,4 +51,4 @@ function List() {
   );
 }
 
-export default List;
+export default ListPage;

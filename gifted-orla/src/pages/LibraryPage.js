@@ -19,7 +19,7 @@ import ListOfLists from "../components/ListOfLists";
 import AuthUI, { uiConfig } from "../service/AuthUI";
 import { auth, db } from "../service/firebase";
 
-const Library = () => {
+const LibraryPage = () => {
   const [lists, setLists] = useState([]);
   const [creatingList, setCreatingList] = useState(false);
   const [newListName, setNewListName] = useState("");
@@ -157,4 +157,4 @@ const Library = () => {
   );
 };
 
-export default Library;
+export default LibraryPage;

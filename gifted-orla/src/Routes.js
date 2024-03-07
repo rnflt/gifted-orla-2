@@ -1,17 +1,17 @@
 import { Routes, Route } from "react-router-dom";
 
-import Library from "./pages/Library";
+import LibraryPage from "./pages/LibraryPage";
 import SearchPage from "./pages/SearchPage";
-import Home from "./pages/Home";
-import List from "./pages/List";
+import HomePage from "./pages/HomePage";
+import ListPage from "./pages/ListPage";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/library" element={<Library />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/library" element={<LibraryPage />} />
       <Route path="/search" element={<SearchPage />} />
-      <Route path="/list/:listId" element={<List />} />
+      <Route path="/list/:listId" element={<ListPage />} />
     </Routes>
   );
 };
