@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, query, where, updateDoc, doc } from "firebase/firestore";
 
 class DatabaseService {
   collection;
@@ -40,15 +40,8 @@ class DatabaseService {
   };
 
   // resolve a relation, returns the referenced document
-  getReference = async (documentReference) => {
-    const res = await documentReference.get();
-    const data = res.data();
-
-    if (data && documentReference.id) {
-      data.uid = documentReference.id;
-    }
-
-    return data;
+  getReference = async (id) => {
+    return doc(this.collection, id);
   };
 
   // save a new document in the database
@@ -58,7 +51,8 @@ class DatabaseService {
 
   // update an existing document with new data
   update = async (id, values) => {
-    return await this.collection.doc(id).update(values);
+    const ref = await this.getReference(id);
+    return await updateDoc(ref, values); 
   };
 
   // delete an existing document from the collection
