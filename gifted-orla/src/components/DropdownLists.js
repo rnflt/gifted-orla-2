@@ -1,214 +1,64 @@
-import React, { Component} from "react";
+import { db } from "./firebase";
+import { collection, getDocs } from "firebase/firestore";
 
-import {  Button, ListItemText, ListItemIcon, Menu, MenuItem, TextField} from "@mui/material";
-import Divider from "@mui/material/Divider";
-import AddIcon from '@mui/icons-material/Add';
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
+class DatabaseService {
+  collection;
 
-import { onAuthStateChanged } from "firebase/auth";
-import { collection, getDocs, doc,  query, where, addDoc, updateDoc, arrayRemove, arrayUnion} from "firebase/firestore";
-
-import { auth, db } from "../service/firebase";
-
-class DropdownLists extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      anchorEl: null,
-      searchText: '',
-      filteredLists: [],
-      lists: [],
-      newListName: '',
-      creatingNewList: false,
-      userLoggedIn: false,
-    };
+  // Specify collection name
+  constructor(collectionName) {
+    this.collection = collection(db, collectionName);
   }
 
-  componentDidMount() {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
-        const q = query(collection(db, "Lists"), where("user", "==", uid));
-        getDocs(q).then((Snapshot) => {
-          const data = Snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          this.setState({ lists: data, filteredLists: data, userLoggedIn: true }); 
-        });
-      } else {
-        // User is signed out
-        this.setState({ userLoggedIn: false }); 
-      }
+  // returns list of records as an array of javascript objects
+  getAll = async () => {
+    const snapshot = await getDocs(this.collection);
+    return snapshot.docs.map((doc) => {
+      return {
+        id: doc.id, // append document id to each document
+        ...doc.data(),
+      };
     });
-  }
-
-  handleClick = (event) => {
-    this.setState({ anchorEl: event.currentTarget });
   };
 
-  handleClose = () => {
-    this.setState({ anchorEl: null, searchText: '', filteredLists: this.state.lists });
+  // returns a single document in object format
+  getOne = async ({ queryKey }) => {
+    const { id } = queryKey[1];
+    if (!id) return; // entity form is in create mode
+    const snapshot = await this.collection.doc(id).get();
+    return snapshot.data();
   };
 
-  handleSearchChange = (event) => {
-    const searchText = event.target.value;
-    const { lists } = this.state;
-    const filteredLists = lists.filter(list =>
-      list.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-    this.setState({ searchText, filteredLists });
-  };
+  // resolve a relation, returns the referenced document
+  getReference = async (documentReference) => {
+    const res = await documentReference.get();
+    const data = res.data();
 
-  handleNewListNameChange = (event) => {
-    this.setState({ newListName: event.target.value });
-  };
-
-  handleCreateList = async () => {
-    const { newListName, lists } = this.state;
-    if (newListName.trim() !== '') {
-      // Add the new list to Firestore
-      try {
-        const docRef = await addDoc(collection(db, "Lists"), {
-          name: newListName,
-          user: auth.currentUser.uid,
-        });
-        console.log("List added with ID: ", docRef.id);
-        
-        // Add the new list to state
-        const newList = {
-          id: docRef.id,
-          name: newListName
-        };
-        const updatedLists = [...lists, newList];
-        this.setState({ newListName: '', creatingNewList: false, lists: updatedLists, filteredLists: updatedLists });
-      } catch (error) {
-        console.error("Error adding list: ", error);
-      }
+    if (data && documentReference.id) {
+      data.uid = documentReference.id;
     }
+
+    return data;
   };
 
-  handleListClick = async (listId) => {
-    const  productId  = this.props.product.id;
-    const { lists } = this.state;
-
-    
-    try {
-      // Check if the product already has the list ID
-      const productRef = doc(db, "Products", productId);
-      const productData = this.props.product;
-        if (productData.lists && productData.lists.includes(listId)) {
-          // Remove the list ID
-          await updateDoc(productRef, {
-            lists: arrayRemove(listId)
-          });
-        } else {
-          // Add the list ID
-          await updateDoc(productRef, {
-            lists: arrayUnion(listId)
-          });
-        }
-      } catch (error) {
-      console.error("Error updating product lists: ", error);
-    }
+  // save a new document in the database
+  create = async (data) => {
+    return await this.collection.add(data);
   };
 
-  render() {
-    const { anchorEl, filteredLists, searchText, newListName, creatingNewList, userLoggedIn } = this.state;
-    const open = Boolean(anchorEl);
+  // update an existing document with new data
+  update = async (id, values) => {
+    return await this.collection.doc(id).update(values);
+  };
 
-    return (
-      <div>
-        <Button
-          aria-label="more"
-          id="long-button"
-          aria-controls={open ? 'long-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-haspopup="true"
-          onClick={this.handleClick}
-          startIcon={<AddCircleOutlineIcon />}
-        >
-          Add to List
-        </Button>
-        <Menu
-          id="DropdownList"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={() => {
-            this.handleClose();
-            this.setState({ searchText: '' }); // Clear search field
-          }}
-          MenuListProps={{
-            'aria-labelledby': 'basic-button',
-          }}
-        >
-          <MenuItem>
-            <TextField
-              label="Search Lists"
-              value={searchText}
-              onChange={this.handleSearchChange}
-              onKeyDown={(e) => e.stopPropagation()}
-              fullWidth
-              margin="normal"
-              variant="outlined"
-            />
-          </MenuItem>
-          {!creatingNewList && (
-            <MenuItem onClick={() => this.setState({ creatingNewList: true })}>
-              <ListItemIcon>
-                <AddIcon />
-              </ListItemIcon>
-              <ListItemText>
-                Create New List
-              </ListItemText>
-            </MenuItem>
-          )}
-          {creatingNewList && (
-            <MenuItem>
-              <TextField
-                label="New List Name"
-                value={newListName}
-                onChange={this.handleNewListNameChange}
-                onKeyDown={(e) => e.stopPropagation()}
-                fullWidth
-                margin="normal"
-                variant="outlined"
-              />
-              <Button onClick={this.handleCreateList} variant="contained" color="primary">
-                Confirm
-              </Button>
-            </MenuItem>
-          )}
-          <Divider />
-          {userLoggedIn ? (
-            filteredLists.length > 0 ? (
-              filteredLists.map((list) => (
-                <React.Fragment key={list.id}>
-                  <MenuItem onClick={() => this.handleListClick(list.id)}>
-                    <ListItemIcon>
-                      {this.props.product.lists.includes(list.id)
-                        ? <CheckBoxIcon />
-                        : <CheckBoxOutlineBlankIcon />
-                      }
-                    </ListItemIcon>
-                    <ListItemText>
-                      {list.name}
-                    </ListItemText>
-                  </MenuItem>
-                </React.Fragment>
-              ))
-            ) : <MenuItem>No Lists</MenuItem>
-          ) : (
-            <MenuItem>
-              Not logged in
-            </MenuItem>
-          )}
-        </Menu>
-      </div>
-    );
-  }
+  // delete an existing document from the collection
+  remove = async (id) => {
+    return await this.collection.doc(id).delete();
+  };
 }
 
-export default DropdownLists;
+// Create services for each entity type
+export const ProductService = new DatabaseService("Products");
+
+export const ListService = new DatabaseService("Lists");
+
+export const UserService = new DatabaseService("Users");
