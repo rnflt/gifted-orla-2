@@ -1,35 +1,18 @@
-import React, { useState } from "react";
-
+// SearchBar.js
+import { useState } from "react";
 import TextField from "@mui/material/TextField";
 
-import ProductList from "./ProductList";
-
-function SearchBar({ details }) {
+function SearchBar({ onSearch }) {
   const [searchField, setSearchField] = useState("");
-
-  const filteredProducts = details.filter((product) => {
-    return (
-      product.Name.toLowerCase().includes(searchField.toLowerCase()) ||
-      product.Brand.toLowerCase().includes(searchField.toLowerCase())
-    );
-  });
 
   const handleChange = (e) => {
     setSearchField(e.target.value);
+    onSearch(e.target.value);
   };
-
-  function searchList() {
-    return filteredProducts.length > 0 ? (
-      <ProductList products={filteredProducts} />
-    ) : (
-      <span>Couldn't find any products...</span>
-    );
-  }
 
   return (
     <div>
-      <TextField label="Search Products" onChange={handleChange} />
-      {searchList()}
+      <TextField label="Search Products" value={searchField} onChange={handleChange} />
     </div>
   );
 }
