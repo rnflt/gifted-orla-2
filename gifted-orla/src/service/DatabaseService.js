@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 class DatabaseService {
   collection;
@@ -19,6 +19,17 @@ class DatabaseService {
       };
     });
   };
+
+  getWhere = async (queryCriteria, queryCondition, queryCheck) => {
+    const q = query(this.collection, where(queryCriteria, queryCondition, queryCheck ) )
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => {
+      return {
+        id: doc.id, // append document id to each document
+        ...doc.data(),
+      };
+    });
+  }
 
   // returns a single document in object format
   getOne = async ({ queryKey }) => {
