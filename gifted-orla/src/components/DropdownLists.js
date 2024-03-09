@@ -12,8 +12,8 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 import { onAuthStateChanged } from "firebase/auth";
-import {arrayRemove, arrayUnion, onSnapshot } from "firebase/firestore";
-import { ProductService, ListService } from "../service/DatabaseService";
+import {arrayRemove, arrayUnion } from "firebase/firestore";
+import { ProductService, ListService, UserService } from "../service/DatabaseService";
 import { auth } from "../service/firebase";
 
 const DropdownLists = (product) => {
@@ -72,15 +72,19 @@ const DropdownLists = (product) => {
   const handleCreateList = async () => {
     if (newListName.trim() !== '') {
       try {
-        const docRef = await ListService.create({
+        const uid = auth.currentUser.uid;
+        const listRef = await ListService.create({
           name: newListName,
-          user: auth.currentUser.uid,
+          user: uid,
           products: [],
         });
-        const doc = await ListService.getOne(docRef);
+        const userRef = UserService.update(uid, {lists: arrayUnion(listRef.id)}) 
+        // Fetch lists again after creation
+        const doc = await ListService.getOne(listRef);
         setLists(lists => [...lists, doc]);
-        setFilteredLists(filteredLists => [...filteredLists, doc]);
-        setNewListName('');
+        setFilteredLists(filteredLists => [...filteredLists, doc]);  
+        // Reset input field and flag
+        setNewListName("");
         setCreatingNewList(false);
       } catch (error) {
         console.error("Error adding list: ", error);
