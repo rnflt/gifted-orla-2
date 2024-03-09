@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { collection, getDocs, query, where, updateDoc, doc , addDoc, onSnapshot, getDoc} from "firebase/firestore";
+import { collection, getDocs, query, where, updateDoc, doc , setDoc, onSnapshot, getDoc} from "firebase/firestore";
 
 class DatabaseService {
   collection;
@@ -41,17 +41,17 @@ class DatabaseService {
     return {
       id: ref.id,
       ...snap.data(),
-    }
+    };
   };
 
   // resolve a relation, returns the referenced document
-  getReference = async (id) => {
+  getReference = (id) => {
     return doc(this.collection, id);
   };
 
   // save a new document in the database
   create = async (data) => {
-    return await addDoc(this.collection, data);
+    return await setDoc(this.collection, data);
   };
 
   onSnapshot = (func) => {
