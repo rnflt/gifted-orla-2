@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
 
 import ProductList from "../components/ProductList";
-import { auth, db } from "../service/firebase";
+import { auth } from "../service/firebase";
+import {ProductService, ListService} from "../service/DatabaseService";
 
 
 
@@ -16,31 +16,18 @@ const ListPage = () => {
   const [uid, setUid] = useState("");
 
   useEffect(() => {
-    console.log(listId);
-    const q = query(
-      collection(db, "Products"),
-      where("lists", "array-contains", listId),
-    );
-    getDocs(q).then((Snapshot) => {
-      const data = Snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setProducts(data);
-      console.log(data);
+    ProductService.getWhere("lists", "array-contains", listId).then((docs) => {
+      setProducts(docs);
     });
 
-    const listRef = doc(db, "Lists", listId);
+    const listRef = ListService.getReference(listId);
 
-    const docSnap = getDoc(listRef).then((doc) => {
-      const data = {id: doc.id, ...doc.data()};
-      setList(data);
-      console.log(data.user);
+    ListService.getOne(listRef).then((doc) => {
+      setList(doc);
     });
 
     onAuthStateChanged(auth, (user) => {
       setUid(user.uid);
-      
     });
   }, []);
 
