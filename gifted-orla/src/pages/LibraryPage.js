@@ -4,21 +4,12 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
 import { onAuthStateChanged } from "firebase/auth";
-import {
-  doc,
-  getDoc,
-  collection,
-  setDoc,
-  query,
-  where,
-  getDocs,
-  arrayUnion,
-} from "firebase/firestore";
+import { arrayUnion } from "firebase/firestore";
 
 import ListOfLists from "../components/ListOfLists";
 
 import AuthUI, { uiConfig } from "../service/AuthUI";
-import { auth, db } from "../service/firebase";
+import { auth } from "../service/firebase";
 import { ListService, UserService } from "../service/DatabaseService";
 
 const LibraryPage = () => {
