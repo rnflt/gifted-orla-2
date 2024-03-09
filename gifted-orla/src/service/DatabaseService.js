@@ -59,7 +59,7 @@ class DatabaseService {
 
   // update an existing document with new data
   update = async (id, values) => {
-    const ref = await this.getReference(id);
+    const ref = this.getReference(id);
     return await updateDoc(ref, values); 
   };
 

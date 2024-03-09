@@ -16,7 +16,7 @@ import {arrayRemove, arrayUnion } from "firebase/firestore";
 import { ProductService, ListService, UserService } from "../service/DatabaseService";
 import { auth } from "../service/firebase";
 
-const DropdownLists = (product) => {
+const DropdownLists = ({product}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchText, setSearchText] = useState('');
   const [filteredLists, setFilteredLists] = useState([]);
@@ -40,7 +40,6 @@ const DropdownLists = (product) => {
         setUserLoggedIn(false);
       }
     });
-
     return () => {
       unsubscribeAuth();
     }
@@ -92,19 +91,20 @@ const DropdownLists = (product) => {
     }
   };
 
-  const handleListClick = async (list) => {
+  const handleListClick = (list) => {
+    console.log(product.id, list.id);
     const updatedLists = lists.map(l =>
       l.id === list.id ? { ...list, selected: !list.selected } : l);
     setLists(updatedLists);
     setFilteredLists(updatedLists);
     try {
       if (list.products.includes(product.id)) {
-        await ProductService.update(product.id, {lists: arrayRemove(list.id)});
-        await ListService.update(list.id, {products: arrayRemove(product.id)})
+        ProductService.update(product.id, {lists: arrayRemove(list.id)});
+        ListService.update(list.id, {products: arrayRemove(product.id)})
         
       } else {
-        await ProductService.update(product.id, {lists: arrayUnion(list.id)});
-        await ListService.update(list.id, {products: arrayUnion(product.id)});
+        ProductService.update(product.id, {lists: arrayUnion(list.id)});
+        ListService.update(list.id, {products: arrayUnion(product.id)});
       }
     } catch (error) {
       console.error("Error updating product lists: ", error);
