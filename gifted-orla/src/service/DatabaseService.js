@@ -2,8 +2,6 @@ import { db } from "./firebase";
 import { collection, getDocs, query, where, updateDoc, doc , setDoc, onSnapshot, getDoc} from "firebase/firestore";
 
 class DatabaseService {
-  collection;
-
   // Specify collection name
   constructor(collectionName) {
     this.collection = collection(db, collectionName);
@@ -51,7 +49,8 @@ class DatabaseService {
 
   // save a new document in the database
   create = async (data) => {
-    return await setDoc(this.collection, data);
+    const ref = doc(this.collection);
+    return await setDoc(ref, data);
   };
 
   onSnapshot = (func) => {

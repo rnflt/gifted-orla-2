@@ -4,7 +4,7 @@ import ProductCard from "./ProductCard";
 const ProductList = ({ products }) => {
   return products.map((product) => (
     <ProductCard
-      key={product.Key}
+      key={product.id}
       brand={product.Brand}
       name={product.Name}
       price={product.Price}

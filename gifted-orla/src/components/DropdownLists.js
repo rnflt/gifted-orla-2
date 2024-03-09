@@ -16,7 +16,7 @@ import {arrayRemove, arrayUnion, onSnapshot } from "firebase/firestore";
 import { ProductService, ListService } from "../service/DatabaseService";
 import { auth } from "../service/firebase";
 
-const DropdownLists = ({ product }) => {
+const DropdownLists = (product) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchText, setSearchText] = useState('');
   const [filteredLists, setFilteredLists] = useState([]);

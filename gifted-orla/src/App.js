@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import AppRoutes from "./Routes";
 import CssBaseline from "@mui/material/CssBaseline";
 

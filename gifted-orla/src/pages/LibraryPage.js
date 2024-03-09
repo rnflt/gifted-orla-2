@@ -12,17 +12,20 @@ import {
   query,
   where,
   getDocs,
+  arrayUnion,
 } from "firebase/firestore";
 
 import ListOfLists from "../components/ListOfLists";
 
 import AuthUI, { uiConfig } from "../service/AuthUI";
 import { auth, db } from "../service/firebase";
+import { ListService, UserService } from "../service/DatabaseService";
 
 const LibraryPage = () => {
   const [lists, setLists] = useState([]);
   const [creatingList, setCreatingList] = useState(false);
   const [newListName, setNewListName] = useState("");
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
 
 
   useEffect(() => {
@@ -30,47 +33,45 @@ const LibraryPage = () => {
       if (user) {
         // user signed in
         const uid = user.uid;
+
         document.getElementById("user-signed-in").style.display = "block";
 
-        const userRef = doc(db, "Users", uid);
+        const userRef = UserService.getReference(uid);
 
-        const docSnap = getDoc(userRef).then((docu) => {
-          if (docu._document) {
+        const docSnap = UserService.getOne(userRef)
+        
+        docSnap.then((doc) => {
+          if (!doc.empty) {
             console.log("Found user");   
-            // fetch lists
-            const q = query(collection(db, "Lists"), where("user", "==", uid));
-            getDocs(q).then((Snapshot) => {
-              const data = Snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-              }));
+            ListService.getWhere('user', "==", uid).then((doc) => {
+              const data = doc.map(list => ({ ...list}));
               setLists(data);
+              setUserLoggedIn(true);
             });
           } else {
-            setDoc(userRef, {
-              name: uid,
-            });
-
-            // Create "Wishlist" list
-            setDoc(doc(collection(db, "Lists")), {
+            // Create "Wishlist" and My Gear list
+            const wishlistRef = ListService.create({
               user: uid,
               name: "Wishlist",
+              products: [],
             });
 
-            // Create "My Gear" list
-            setDoc(doc(collection(db, "Lists")), {
+            const myGearRef = ListService.create({
               user: uid,
               name: "My Gear",
+              products: [],
             });
 
+            UserService.create({
+              name: uid,
+              lists: [wishlistRef.id, myGearRef.id],
+            })
+
             // fetch lists
-            const q = query(collection(db, "Lists"), where("user", "==", uid));
-            getDocs(q).then((Snapshot) => {
-              const data = Snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-              }));
+            ListService.getWhere('user', "==", uid).then((doc) => {
+              const data = doc.map(list => ({ ...list}));
               setLists(data);
+              setUserLoggedIn(true);
             });
           }
         });
@@ -83,22 +84,22 @@ const LibraryPage = () => {
     });
   }, []);
 
+  const handleNewListNameChange = (event) => {
+    setNewListName(event.target.value);
+  };
+
   const handleCreateList = async () => {
     if (newListName.trim() !== "") {
       const uid = auth.currentUser.uid;
-      await setDoc(doc(collection(db, "Lists")), {
-        user: uid,
+      const listRef = await ListService.create({
         name: newListName,
+        user: uid,
+        products: [],
       });
-
+      const userRef = UserService.update(uid, {lists: arrayUnion(listRef.id)}) 
       // Fetch lists again after creation
-      const q = query(collection(db, "Lists"), where("user", "==", uid));
-      const snapshot = await getDocs(q);
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setLists(data);
+      const doc = await ListService.getOne(listRef);
+      setLists(lists => [...lists, doc]);
 
       // Reset input field and flag
       setNewListName("");
@@ -137,9 +138,13 @@ const LibraryPage = () => {
         ) : (
           <div>
             <TextField
-              label="List Name"
+              label="New List Name"
               value={newListName}
-              onChange={(e) => setNewListName(e.target.value)}
+              onChange={handleNewListNameChange}
+              onKeyDown={(e) => e.stopPropagation()}
+              fullWidth
+              margin="normal"
+              variant="outlined"
             />
             <Button
               variant="contained"
