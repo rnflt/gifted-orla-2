@@ -4,13 +4,15 @@ import { useParams } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 
 import ProductList from "../components/ProductList";
+import BackButton from "../components/BackButton";
+
 import { auth } from "../service/firebase";
 import {ProductService, ListService} from "../service/DatabaseService";
 
 
 
 const ListPage = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(null);
   let { listId } = useParams();
   const [list, setList] = useState([]);
   const [uid, setUid] = useState("");
@@ -31,11 +33,16 @@ const ListPage = () => {
     });
   }, []);
 
-  return products.length > 0 ? (
-    <ProductList products={products} />
-  ) : (
-    <span>Loading...</span>
+  return (
+    <div>
+      <BackButton />
+      {products == null ? <span>Loading...</span>
+      : products.length > 0 ? <ProductList products={products} />
+      : <span>No products on the list</span>
+      }
+    </div>
   );
-}
+
+};
 
 export default ListPage;
