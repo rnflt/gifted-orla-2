@@ -10,6 +10,7 @@ const ProductList = ({ products }) => {
       price={product.Price}
       lists={product.lists}
       id={product.id}
+      image={product.image}
     />
   ));
 };

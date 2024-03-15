@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect , useState} from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardActionArea from "@mui/material/CardActionArea";
@@ -9,7 +9,16 @@ import IconButton from "@mui/material/IconButton";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DropdownLists from "./DropdownLists";
 
+
+import StorageService from "../service/StorageService"; // Temporary until image path in db
+
 const ProductCard = (props) => {
+  const [imagePath, setImagePath] = useState();
+
+  useEffect( () => {
+    StorageService.getImageURL('products/' + props.image).then((url) => setImagePath(url));
+  })
+
   return (
     <Card sx={{ display: "flex", flexDirection: "row" }}>
       <CardActionArea
@@ -21,7 +30,7 @@ const ProductCard = (props) => {
         <CardMedia
           component="img"
           sx={{ width: "150px" }}
-          image={require("../assets/house.jpg")}
+          image={imagePath}
           alt="green iguana"
         />
         <CardContent sx={{ flex: "1 0 auto" }}>
