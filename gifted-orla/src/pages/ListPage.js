@@ -5,6 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 
 import ProductList from "../components/ProductList";
 import BackButton from "../components/BackButton";
+import DeleteListButton from "../components/DeleteListButton";
 
 import { auth } from "../service/firebase";
 import {ProductService, ListService} from "../service/DatabaseService";
@@ -36,6 +37,7 @@ const ListPage = () => {
   return (
     <div>
       <BackButton />
+      <DeleteListButton listId={listId} uid={uid} />
       {products == null ? <span>Loading...</span>
       : products.length > 0 ? <ProductList products={products} />
       : <span>No products on the list</span>
