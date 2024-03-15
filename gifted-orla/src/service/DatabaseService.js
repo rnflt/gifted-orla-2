@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { collection, getDocs, query, where, updateDoc, doc , setDoc, onSnapshot, getDoc} from "firebase/firestore";
+import { collection, getDocs, query, where, updateDoc, doc , setDoc, onSnapshot, getDoc, deleteDoc} from "firebase/firestore";
 
 class DatabaseService {
   // Specify collection name
@@ -65,7 +65,14 @@ class DatabaseService {
 
   // delete an existing document from the collection
   remove = async (id) => {
-    console.log("Not implemented yet")
+    const ref = this.getReference(id);
+    try {
+      await deleteDoc(ref);
+      console.log("Document successfully deleted!");
+    } catch (error) {
+      console.error("Error removing document: ", error);
+      throw error; // Propagate the error to handle it in the caller
+    }
   };
 }
 
