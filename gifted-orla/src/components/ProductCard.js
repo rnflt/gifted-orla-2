@@ -5,12 +5,9 @@ import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import DropdownLists from "./DropdownLists";
+import AddToListDialog from "./AddToListDialog";
 
-
-import StorageService from "../service/StorageService"; // Temporary until image path in db
+import StorageService from "../service/StorageService"; 
 
 const ProductCard = (props) => {
   const [imagePath, setImagePath] = useState();
@@ -42,8 +39,7 @@ const ProductCard = (props) => {
         </CardContent>
       </CardActionArea>
       <CardActions sx={{ display: "flex", flexDirection: "column" }}>
-        <DropdownLists product={props} />
-        <IconButton><MoreHorizIcon /></IconButton>
+        <AddToListDialog product={props} />
       </CardActions>
     </Card>
   );

@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
+
 import Button from "@mui/material/Button";
-import ListItemText from "@mui/material/ListItemText";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Divider from "@mui/material/Divider";
+
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
@@ -17,8 +21,8 @@ import {arrayRemove, arrayUnion } from "firebase/firestore";
 import { ProductService, ListService } from "../service/DatabaseService";
 import { auth } from "../service/firebase";
 
-const DropdownLists = ({product}) => {
-  const [anchorEl, setAnchorEl] = useState(null);
+const AddToListDialog = ({product}) => {
+  const [open, setOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [filteredLists, setFilteredLists] = useState([]);
   const [lists, setLists] = useState([]);
@@ -47,12 +51,12 @@ const DropdownLists = ({product}) => {
     }
   }, []);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleOpen = () => {
+    setOpen(true);
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setOpen(false);
     setSearchText('');
     setFilteredLists(lists);
   };
@@ -73,7 +77,6 @@ const DropdownLists = ({product}) => {
   };
 
   const handleListClick = (list) => {
-    console.log(product.id, list.id);
     const updatedLists = lists.map(l =>
       l.id === list.id ? { ...list, selected: !list.selected } : l);
     setLists(updatedLists);
@@ -92,67 +95,52 @@ const DropdownLists = ({product}) => {
     }
   };
 
-  const open = Boolean(anchorEl);
-
   return (
     <div>
       <Button
         aria-label="more"
         id="long-button"
-        aria-controls={open ? 'long-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        onClick={handleClick}
+        onClick={handleOpen}
         startIcon={<AddCircleOutlineIcon />}
       >
         Add to List
       </Button>
-      <Menu
-        id="DropdownList"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={() => {
-          handleClose();
-          setSearchText('');
-        }}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        <MenuItem>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Choose List</DialogTitle>
+        <DialogContent>
           <TextField
             label="Search Lists"
             value={searchText}
             onChange={handleSearchChange}
-            onKeyDown={(e) => e.stopPropagation()}
             fullWidth
             margin="normal"
             variant="outlined"
           />
-        </MenuItem>
-        <CreateListButton uid={uid} handleNewList={handleNewList} />
-        <Divider />
-        {userLoggedIn ? (
-          filteredLists.length > 0 ? (
-            filteredLists.map((list) => (
+          <CreateListButton uid={uid} handleNewList={handleNewList} />
+          <Divider />
+          {userLoggedIn ? (
+            filteredLists.length > 0 ? (
+              filteredLists.map((list) => (
                 <MenuItem key={list.id} onClick={() => handleListClick(list)}>
                   <ListItemIcon>
                     {list.selected ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
                   </ListItemIcon>
-                  <ListItemText>
-                    {list.name}
-                  </ListItemText>
+                  {list.name}
                 </MenuItem>
-            ))
-          ) : <MenuItem>No Lists</MenuItem>
-        ) : (
-          <MenuItem>
-            Not logged in
-          </MenuItem>
-        )}
-      </Menu>
+              ))
+            ) : <MenuItem>No Lists</MenuItem>
+          ) : (
+            <MenuItem>
+              Not logged in
+            </MenuItem>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
 
-export default DropdownLists;
+export default AddToListDialog;
