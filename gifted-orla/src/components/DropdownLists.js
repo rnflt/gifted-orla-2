@@ -69,25 +69,23 @@ const DropdownLists = ({product}) => {
   };
 
   const handleCreateList = async () => {
-    if (newListName.trim() !== '') {
-      try {
-        const uid = auth.currentUser.uid;
-        const listRef = await ListService.create({
-          name: newListName,
-          user: uid,
-          products: [],
-        });
-        const userRef = UserService.update(uid, {lists: arrayUnion(listRef.id)}) 
-        // Fetch lists again after creation
-        const doc = await ListService.getOne(listRef);
-        setLists(lists => [...lists, doc]);
-        setFilteredLists(filteredLists => [...filteredLists, doc]);  
-        // Reset input field and flag
-        setNewListName("");
-        setCreatingNewList(false);
-      } catch (error) {
-        console.error("Error adding list: ", error);
-      }
+    if (newListName.trim() !== "") {
+      const uid = auth.currentUser.uid;
+      const listRef = await ListService.create({
+        name: newListName,
+        user: uid,
+        products: [],
+      });
+
+      // Fetch lists again after creation
+      const doc = await ListService.getOne(listRef);
+      setLists(lists => [...lists, doc]);
+      setFilteredLists(filteredLists => [...filteredLists, doc] )
+      const userRef = UserService.update(uid, {lists: arrayUnion(doc.id)}) 
+     
+      // Reset input field and flag
+      setNewListName("");
+      setCreatingNewList(false);
     }
   };
 

@@ -87,11 +87,13 @@ const LibraryPage = () => {
         user: uid,
         products: [],
       });
-      const userRef = UserService.update(uid, {lists: arrayUnion(listRef.id)}) 
+
       // Fetch lists again after creation
       const doc = await ListService.getOne(listRef);
       setLists(lists => [...lists, doc]);
 
+      const userRef = UserService.update(uid, {lists: arrayUnion(doc.id)}) 
+     
       // Reset input field and flag
       setNewListName("");
       setCreatingList(false);

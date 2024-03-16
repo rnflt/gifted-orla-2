@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { collection, getDocs, query, where, updateDoc, doc , setDoc, onSnapshot, getDoc, deleteDoc} from "firebase/firestore";
+import { collection, getDocs, query, where, updateDoc, doc , addDoc, onSnapshot, getDoc, deleteDoc} from "firebase/firestore";
 
 class DatabaseService {
   // Specify collection name
@@ -49,8 +49,7 @@ class DatabaseService {
 
   // save a new document in the database
   create = async (data) => {
-    const ref = doc(this.collection);
-    return await setDoc(ref, data);
+    return await addDoc(this.collection, data);
   };
 
   onSnapshot = (func) => {
