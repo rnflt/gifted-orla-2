@@ -6,14 +6,15 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Divider from "@mui/material/Divider";
-import AddIcon from "@mui/icons-material/Add";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
+import CreateListButton from "./CreateListButton";
+
 import { onAuthStateChanged } from "firebase/auth";
 import {arrayRemove, arrayUnion } from "firebase/firestore";
-import { ProductService, ListService, UserService } from "../service/DatabaseService";
+import { ProductService, ListService } from "../service/DatabaseService";
 import { auth } from "../service/firebase";
 
 const DropdownLists = ({product}) => {
@@ -21,15 +22,16 @@ const DropdownLists = ({product}) => {
   const [searchText, setSearchText] = useState('');
   const [filteredLists, setFilteredLists] = useState([]);
   const [lists, setLists] = useState([]);
-  const [newListName, setNewListName] = useState('');
-  const [creatingNewList, setCreatingNewList] = useState(false);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const [uid, setUid] = useState("");
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
-        const uid = user.uid;
-        ListService.getWhere('user', "==", uid).then((data) => {
+        const id = user.uid;
+        setUid(id);
+
+        ListService.getWhere('user', "==", id).then((data) => {
           const lists = data.map(list => ({ ...list, selected: list.products.includes(product.id) }));
           setLists(lists);
           setFilteredLists(lists);
@@ -64,29 +66,10 @@ const DropdownLists = ({product}) => {
     setFilteredLists(filteredLists);
   };
 
-  const handleNewListNameChange = (event) => {
-    setNewListName(event.target.value);
-  };
-
-  const handleCreateList = async () => {
-    if (newListName.trim() !== "") {
-      const uid = auth.currentUser.uid;
-      const listRef = await ListService.create({
-        name: newListName,
-        user: uid,
-        products: [],
-      });
-
-      // Fetch lists again after creation
-      const doc = await ListService.getOne(listRef);
-      setLists(lists => [...lists, doc]);
-      setFilteredLists(filteredLists => [...filteredLists, doc] )
-      const userRef = UserService.update(uid, {lists: arrayUnion(doc.id)}) 
-     
-      // Reset input field and flag
-      setNewListName("");
-      setCreatingNewList(false);
-    }
+  const handleNewList = async (listRef) => {
+    const doc = await ListService.getOne(listRef);
+    setLists(lists => [...lists, doc]);
+    setFilteredLists(filteredLists => [...filteredLists, doc] )
   };
 
   const handleListClick = (list) => {
@@ -147,32 +130,7 @@ const DropdownLists = ({product}) => {
             variant="outlined"
           />
         </MenuItem>
-        {!creatingNewList && (
-          <MenuItem onClick={() => setCreatingNewList(true)}>
-            <ListItemIcon>
-              <AddIcon />
-            </ListItemIcon>
-            <ListItemText>
-              Create New List
-            </ListItemText>
-          </MenuItem>
-        )}
-        {creatingNewList && (
-          <MenuItem>
-            <TextField
-              label="New List Name"
-              value={newListName}
-              onChange={handleNewListNameChange}
-              onKeyDown={(e) => e.stopPropagation()}
-              fullWidth
-              margin="normal"
-              variant="outlined"
-            />
-            <Button onClick={handleCreateList} variant="contained" color="primary">
-              Confirm
-            </Button>
-          </MenuItem>
-        )}
+        <CreateListButton uid={uid} handleNewList={handleNewList} />
         <Divider />
         {userLoggedIn ? (
           filteredLists.length > 0 ? (

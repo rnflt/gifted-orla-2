@@ -2,13 +2,11 @@ import React, { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 import { ListService, UserService } from "../service/DatabaseService";
 import { arrayUnion } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
 
 const CreateListButton = ({ uid, handleNewList }) => {
   const [open, setOpen] = useState(false);
   const [newListName, setNewListName] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleOpen = () => {
     setOpen(true);
@@ -58,6 +56,7 @@ const CreateListButton = ({ uid, handleNewList }) => {
             fullWidth
             value={newListName}
             onChange={(e) => setNewListName(e.target.value)}
+            onKeyDown={(e) => e.stopPropagation()}
             error={!!error}
             helperText={error}
           />
