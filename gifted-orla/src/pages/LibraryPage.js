@@ -14,8 +14,6 @@ import { ListService, UserService } from "../service/DatabaseService";
 
 const LibraryPage = () => {
   const [lists, setLists] = useState([]);
-  const [creatingList, setCreatingList] = useState(false);
-  const [newListName, setNewListName] = useState("");
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [uid, setUid] = useState("");
 

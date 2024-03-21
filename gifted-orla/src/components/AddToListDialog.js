@@ -15,6 +15,7 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 import CreateListButton from "./CreateListButton";
+import LoginDialog from "./LoginDialog";
 
 import { onAuthStateChanged } from "firebase/auth";
 import {arrayRemove, arrayUnion } from "firebase/firestore";
@@ -34,7 +35,6 @@ const AddToListDialog = ({product}) => {
       if (user) {
         const id = user.uid;
         setUid(id);
-
         ListService.getWhere('user', "==", id).then((data) => {
           const lists = data.map(list => ({ ...list, selected: list.products.includes(product.id) }));
           setLists(lists);
@@ -116,9 +116,9 @@ const AddToListDialog = ({product}) => {
             margin="normal"
             variant="outlined"
           />
-          <CreateListButton uid={uid} handleNewList={handleNewList} />
           <Divider />
-          {userLoggedIn ? (
+          {userLoggedIn && 
+          <CreateListButton uid={uid} handleNewList={handleNewList} /> ? (
             filteredLists.length > 0 ? (
               filteredLists.map((list) => (
                 <MenuItem key={list.id} onClick={() => handleListClick(list)}>
@@ -130,9 +130,7 @@ const AddToListDialog = ({product}) => {
               ))
             ) : <MenuItem>No Lists</MenuItem>
           ) : (
-            <MenuItem>
-              Not logged in
-            </MenuItem>
+            <LoginDialog />
           )}
         </DialogContent>
         <DialogActions>
